@@ -1,0 +1,8 @@
+[flake8]
+max-line-length = 105
+exclude = 
+    .git,
+    __pycache__,
+    manage.py,
+    settings.py,
+    migrations

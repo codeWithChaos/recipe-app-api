@@ -1,7 +1,5 @@
 requirements.txt
 requirements.dev.txt
-.flaake8
-manage.py
 Pipfile
 Pipfile.lock
 recipe/management

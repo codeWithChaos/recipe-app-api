@@ -1,22 +1,26 @@
----
-name: Checks
+name: Django CI
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  test-lint:
-    name: Test and Lint
-    runs-on: ubuntu-20.04
+  build:
+    runs-on: ubuntu-latest
 
     services:
       postgres:
-        image: postgres:13
+        image: postgres:latest
         env:
           POSTGRES_DB: ${{ secrets.DB_NAME }}
           POSTGRES_USER: ${{ secrets.DB_USER }}
           POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
         ports:
-          - 5433:5432
+          - 5433:5432 # Map port 5432 inside the container to 5433 on the host
         options: >-
           --health-cmd "pg_isready -U postgres"
           --health-interval 10s
@@ -24,32 +28,37 @@ jobs:
           --health-retries 5
 
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: "3.11.0"
-
-      - name: Install pipenv
-        run: pip install pipenv
+          python-version: "3.11" # Specify your Python version
 
       - name: Install dependencies
         run: |
-          pipenv install --dev
-          pipenv install -r requirements.dev.txt
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-      - name: Print working directory
-        run: pwd
+      - name: Set environment variables
+        run: |
+          echo "DB_NAME=${{ secrets.DB_NAME }}" >> $GITHUB_ENV
+          echo "DB_USER=${{ secrets.DB_USER }}" >> $GITHUB_ENV
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
+          echo "DB_HOST=localhost" >> $GITHUB_ENV
+          echo "DB_PORT=5433" >> $GITHUB_ENV
 
-      - name: List files
-        run: ls -la
+      - name: Run migrations
+        run: python manage.py migrate
 
-      - name: Test
-        working-directory: ${{ github.workspace }}
-        run: pipenv run python manage.py test
+      - name: Run tests
+        run: python manage.py test
 
-      - name: Lint
-        working-directory: ${{ github.workspace }}
-        run: pipenv run flake8
+      - name: Debug Environment Variables
+        run: |
+          echo "DB_NAME=${{ secrets.DB_NAME }}"
+          echo "DB_USER=${{ secrets.DB_USER }}"
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}"
+          echo "DB_HOST=${{ secrets.DB_HOST }}"
+          echo "DB_PORT=5433"

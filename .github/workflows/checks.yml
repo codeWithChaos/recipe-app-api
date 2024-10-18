@@ -29,8 +29,8 @@ jobs:
 
         - name: Test
           working-directory: ${{ github.workspace }}
-          run: python ./manage.py test
+          run: pipenv run python manage.py test
 
         - name: Lint
           working-directory: ${{ github.workspace }}
-          run: flake8
+          run: pipenv run flake8

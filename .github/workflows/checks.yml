@@ -10,7 +10,19 @@ jobs:
     steps:
         - name: Checkout
           uses: actions/checkout@v2
+
+        - name: Set up Python
+          uses: actions/setup-python@v2
+          with:
+            python-version: '3.11.0'
+        - name: Install pipenv
+          run: pip install pipenv
+
+        - name: Install dependencies
+          run: pipenv install --dev
+
         - name: Test
           run: python manage.py test
+          
         - name: Lint
           run: flake8

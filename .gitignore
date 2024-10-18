@@ -1,5 +1,3 @@
-requirements.txt
-requirements.dev.txt
 Pipfile
 Pipfile.lock
 recipe/management

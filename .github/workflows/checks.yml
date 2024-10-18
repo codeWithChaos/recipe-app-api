@@ -22,7 +22,9 @@ jobs:
           run: pipenv install --dev
 
         - name: Test
+          working-directory: .
           run: python manage.py test
-          
+
         - name: Lint
+          working-directory: .
           run: flake8

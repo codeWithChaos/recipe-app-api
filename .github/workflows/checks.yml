@@ -21,9 +21,15 @@ jobs:
         - name: Install dependencies
           run: pipenv install --dev
 
+        - name: Print working directory
+          run: pwd
+
+        - name: List files
+          run: ls -la
+
         - name: Test
           working-directory: .
-          run: python manage.py test
+          run: python ./manage.py test
 
         - name: Lint
           working-directory: .

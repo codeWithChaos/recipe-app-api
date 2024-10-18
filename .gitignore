@@ -1,3 +1,6 @@
 Pipfile
 Pipfile.lock
 recipe/management
+.env
+config/tests.py
+config/calc.py

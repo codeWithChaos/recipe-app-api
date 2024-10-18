@@ -28,9 +28,9 @@ jobs:
           run: ls -la
 
         - name: Test
-          working-directory: .
+          working-directory: ${{ github.workspace }}
           run: python ./manage.py test
 
         - name: Lint
-          working-directory: .
+          working-directory: ${{ github.workspace }}
           run: flake8

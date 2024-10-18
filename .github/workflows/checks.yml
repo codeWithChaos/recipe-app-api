@@ -19,7 +19,9 @@ jobs:
           run: pip install pipenv
 
         - name: Install dependencies
-          run: pipenv install --dev
+          run: |
+            pipenv install --dev
+            pipenv install -r requirements.dev.txt
 
         - name: Print working directory
           run: pwd

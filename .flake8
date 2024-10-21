@@ -6,3 +6,8 @@ exclude =
     manage.py,
     settings.py,
     migrations
+ignore = 
+    E203,
+    W291,
+    W293,
+    W191

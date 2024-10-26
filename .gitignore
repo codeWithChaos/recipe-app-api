@@ -4,3 +4,4 @@ recipe/management
 .env
 config/tests.py
 config/calc.py
+notes.txt

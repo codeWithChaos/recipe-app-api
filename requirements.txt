@@ -1,4 +1,4 @@
-djangorestframework>=3.12.4,<3.13
-django
+djangorestframework>=3.12.4,<4.0
+django>=4.2,<5.0
 python-dotenv
-drf-spectacular
+drf-spectacular>=0.26,<0.27

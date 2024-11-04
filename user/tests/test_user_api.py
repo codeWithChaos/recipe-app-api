@@ -18,21 +18,22 @@ class PublicUserApiTests(TestCase):
     """Test the public features of the user api"""
     
     def setUp(self):
-        self.client = APIClient()
+        self.client = APIClient() # Create an API client for testing
 
     def test_create_user_success(self):
-        """Test creating a user is successful"""
+        """Test creating a user is successful."""
+        # Payload for testing the api
         payload = {
             'email': 'test@example.com',
             'password': 'testpass123',
             'name': 'Test Name',
         }
-        res = self.client.post(CREATE_USER_URL, payload)
+        res = self.client.post(CREATE_USER_URL, payload) # making a post request to the created url
 
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
         user = get_user_model().objects.get(email=payload['email'])
-        self.assertTrue(user.check_password(payload['password']))
-        self.assertNotIn('passsword', res.data)
+        self.assertTrue(user.check_password(payload['password'])) # 
+        self.assertNotIn('passsword', res.data)  # Make sure the password is not return in the response for security reasons
 
     def test_user_with_email_exists_error(self):
         """Test error returned if user with email exists."""
@@ -41,10 +42,10 @@ class PublicUserApiTests(TestCase):
             'password': 'testpass123',
             'name': 'Test Name',
         }
-        create_user(**payload)
-        res = self.client.post(CREATE_USER_URL, payload)
+        create_user(**payload) # takes payload and call the create user to create a new user
+        res = self.client.post(CREATE_USER_URL, payload) # make a post request to the url
 
-        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST) # check for bad request
 
     def test_password_too_short_error(self):
         """Test an error is returned if password less than 5 chars."""
@@ -58,5 +59,6 @@ class PublicUserApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
         user_exists = get_user_model().objects.filter(
             email=payload['email']
-        ).exists()
-        self.assertFalse(user_exists)
+        ).exists() # check that it doesn't create a user
+        self.assertFalse(user_exists) # Confirm user doesn't actually exist in the database
+        

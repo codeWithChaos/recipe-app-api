@@ -8,6 +8,7 @@ from rest_framework import status
 
 
 CREATE_USER_URL = reverse('user:create')
+TOKEN_URL = reverse('user:token') # URL endpoint for creating tokens
 
 # Helper function to create a user
 def create_user(**params):
@@ -62,3 +63,20 @@ class PublicUserApiTests(TestCase):
         ).exists() # check that it doesn't create a user
         self.assertFalse(user_exists) # Confirm user doesn't actually exist in the database
         
+    def test_create_token_for_user(self):
+        """Test generates token for valid credentials."""
+        user_datails = {
+            'name': 'Test Name',
+            'email': 'test@example.com',
+            'password': 'test-user-password'
+        }
+        create_user(**user_datails)
+
+        payload = {
+        'email': user_datails['email'],
+        'password': user_datails['password'],
+        }
+        res = self.client.post(TOKEN_URL, payload) # POST the payload to the token url
+
+        self.assertIn('token', res.data)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
